@@ -27,7 +27,7 @@ end
 execute 'start karaf' do
   command <<-EOF
     #{start_command}
-    sleep 5
+    sleep 20s
   EOF
 end
 
@@ -46,9 +46,16 @@ link '/etc/init.d/karaf-service' do
 end
 
 service 'karaf-service' do
-  supports :status => true, :restart => true
-  action :start
+  supports :status => true, :start => true, :stop => true, :restart => true
+  action [:enable, :start]
 end
+
+execute 'Wait' do
+  command <<-EOF
+    sleep 10s
+  EOF
+end
+
 
 # Install feature repos
 node['karaf']['feature_repos'].each_pair do |name, version|
@@ -67,4 +74,3 @@ node['karaf']['features'].each do |name|
     EOF
   end
 end
-
