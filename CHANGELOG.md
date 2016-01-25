@@ -3,11 +3,10 @@ karaf CHANGELOG
 
 This file is used to list changes made in each version of the karaf cookbook.
 
+0.2.0 - 1/25/2016
+-----
+- Jason Capriotti - Add support for specifying user with which to run service
+
 0.1.0
 -----
-- [your_name] - Initial release of karaf
-
-- - -
-Check the [Markdown Syntax Guide](http://daringfireball.net/projects/markdown/syntax) for help with Markdown.
-
-The [Github Flavored Markdown page](http://github.github.com/github-flavored-markdown/) describes the differences between markdown on github and standard markdown.
+- Jason Capriotti - Initial release of karaf

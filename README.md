@@ -1,55 +1,37 @@
-karaf Cookbook
-==============
-TODO: Enter the cookbook description here.
-
-e.g.
-This cookbook makes your favorite breakfast sandwich.
-
-Requirements
-------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
-
-e.g.
-#### packages
-- `toaster` - karaf needs toaster to brown your bagel.
-
-Attributes
-----------
-TODO: List your cookbook attributes here.
-
-e.g.
-#### karaf::default
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['karaf']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
-  </tr>
-</table>
+karaf 
+=====
+This cookbook installs [Apache Karaf](http://karaf.apache.org/).
 
 Usage
 -----
-#### karaf::default
-TODO: Write usage instructions for each cookbook.
+Override attributes with your desired values and include the `karaf` recipe.
 
-e.g.
-Just include `karaf` in your node's `run_list`:
+Requirements
+------------
+* java cookbook
+* ark cookbook
 
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[karaf]"
-  ]
-}
-```
+### Platform
+* Tested on Fedora 22 and CentOS 6.5
+
+Attributes
+----------
+See `attributes/default.rb` for default values.
+
+* `node['karaf']['version']` - The version to install, defaults to `'3.03'`
+* `node['karaf']['url']` - Overrides the URL to download the karaf from. Otherwise http://archive.apache.org/dist/karaf/&lt;version&gt;/apache-karaf-&lt;version&gt;.tar.gz" is used.
+* `node['karaf']['install_path']` - The path to install to, defaults to `'/usr/local'`
+* `node['karaf']['install_java']` - Whether or not to install Java, defaults to `true`
+* `node['karaf']['service_user']` - The user to run Karaf as, not set by default.
+* `node['karaf']['feature_repos']` - A hash of feature repos to install. Allows you to specify the  repository name as the key and version as the value. Defaults to `'hawtio'` / `'1.4.51'`.
+* `node['karaf']['features']` - An array of the features to install. Defaults to `'hawtio'`.
+
+The following attributes control the default Java cookbook settings
+
+* `node['java']['install_flavor']` - Defaults to `'oracle'`
+* `node['java']['jdk_version']` - Defaults to `'7'`
+* `node['java']['set_etc_environment']` - Defaults to `true`
+* `node['java']['oracle']['accept_oracle_download_terms']` - Defaults to `true`
 
 Contributing
 ------------
@@ -65,4 +47,4 @@ e.g.
 
 License and Authors
 -------------------
-Authors: TODO: List authors
+Authors: Jason Capriotti

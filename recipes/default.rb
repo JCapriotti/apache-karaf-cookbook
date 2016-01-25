@@ -19,8 +19,9 @@ else
 end
 
 ark "karaf" do
-  url karaf_url
-  path install_path
+  url   karaf_url
+  path  install_path
+  owner node['karaf']['service_user']
   action :put
 end
 
@@ -29,6 +30,8 @@ execute 'start karaf' do
     #{start_command}
     sleep 20s
   EOF
+  # Initial start should be as service user otherwise directories that get created will be owned by root
+  user  node['karaf']['service_user']
 end
 
 
@@ -44,6 +47,16 @@ link '/etc/init.d/karaf-service' do
   to "#{karaf_path}/bin/karaf-service"
   link_type :symbolic
 end
+
+ruby_block 'modify user that karaf runs as' do
+  block do
+    fe = Chef::Util::FileEdit.new("#{karaf_path}/bin/karaf-service")
+    fe.search_file_replace_line(/#RUN_AS_USER=/, "RUN_AS_USER=#{node['karaf']['service_user']}")
+    fe.write_file
+  end
+  only_if { !node['karaf']['service_user'].nil? && !node['karaf']['service_user'].empty? && File.readlines("#{karaf_path}/bin/karaf-service").grep(/#RUN_AS_USER=/).any? }
+end
+
 
 service 'karaf-service' do
   supports :status => true, :start => true, :stop => true, :restart => true
