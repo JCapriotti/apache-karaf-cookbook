@@ -5,8 +5,8 @@
 
 install_path = node['karaf']['install_path']
 karaf_path = "#{install_path}/karaf"
-start_command = "#{karaf_path}/bin/start"
-client_command = "#{karaf_path}/bin/client"
+start_command = "bin/start"
+client_command = "bin/client"
 
 if node['karaf']['install_java']
   include_recipe 'java'
@@ -26,20 +26,20 @@ ark "karaf" do
 end
 
 execute 'start karaf' do
+  cwd karaf_path
+  user node['karaf']['service_user'] # Initial start should be as service user otherwise directories that get created will be owned by root
   command <<-EOF
     #{start_command}
     sleep 20s
   EOF
-  # Initial start should be as service user otherwise directories that get created will be owned by root
-  user  node['karaf']['service_user']
 end
-
 
 execute 'install karaf service wrapper' do
   command <<-EOF
     #{client_command} -u karaf feature:install service-wrapper
     #{client_command} -u karaf wrapper:install
   EOF
+  cwd  karaf_path
   not_if  { ::File.exists?("#{karaf_path}/bin/karaf-service") }
 end
 
@@ -73,6 +73,7 @@ end
 # Install feature repos
 node['karaf']['feature_repos'].each_pair do |name, version|
   execute 'install feature repo' do
+    cwd  karaf_path
     command <<-EOF
       #{client_command} -u karaf feature:repo-add #{name} #{version}
     EOF
@@ -82,6 +83,7 @@ end
 # Install features
 node['karaf']['features'].each do |name|
   execute 'install feature' do
+    cwd  karaf_path
     command <<-EOF
       #{client_command} -u karaf feature:install #{name}
     EOF
