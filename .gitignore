@@ -1,0 +1,6 @@
+.vagrant
+Berksfile.lock
+.kitchen
+.kitchen/
+
+metadata.json
