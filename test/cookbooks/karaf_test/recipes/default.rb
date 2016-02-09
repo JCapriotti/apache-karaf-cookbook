@@ -1,8 +1,12 @@
+user 'someuser' do
+  action :create
+end
 
 
 karaf 'install karaf' do
   install_java  true
   version       '3.0.3'
+  user         'someuser'
   action        :install
 end
 

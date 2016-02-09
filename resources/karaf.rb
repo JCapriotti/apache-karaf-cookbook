@@ -32,13 +32,13 @@ action :install do
     action :put
   end
 
-  execute 'start karaf' do
+  bash 'start karaf' do
     cwd   karaf_path
-    user  user
-    command <<-EOF
+    user  new_resource.user
+    code <<-EOH
       #{start_command}
       sleep 20s
-    EOF
+    EOH
   end
     
   execute 'install karaf service wrapper' do
@@ -50,13 +50,13 @@ action :install do
     not_if  { ::File.exists?("#{karaf_path}/bin/karaf-service") }
   end
 
-  execute 'stop karaf' do
+  bash 'stop karaf' do
     cwd   karaf_path
-    user  user
-    command <<-EOF
+    user  new_resource.user
+    code <<-EOH
       #{stop_command}
       sleep 10s
-    EOF
+    EOH
   end
 
   link '/etc/init.d/karaf-service' do
