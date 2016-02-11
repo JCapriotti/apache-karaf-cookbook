@@ -69,7 +69,32 @@ action :install do
       sleep 10s
     EOF
   end
-
-
 end
 
+
+action :remove do
+
+  service 'karaf-service' do
+    ignore_failure  true
+    action          :stop
+  end
+
+  execute 'Stop karaf' do
+    ignore_failure  true
+    cwd             karaf_path
+    user            new_resource.user
+    command <<-EOF
+      #{stop_command}
+    EOF
+  end
+
+  link '/etc/init.d/karaf-service' do
+    action :delete
+  end
+
+  directory karaf_path do
+    recursive true
+    action    :delete
+  end
+
+end

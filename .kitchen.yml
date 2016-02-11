@@ -13,4 +13,5 @@ suites:
   - name: default
     run_list:
       - recipe[karaf_test::default]
+      - recipe[karaf_test::remove]
     attributes:
