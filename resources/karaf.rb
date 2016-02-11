@@ -11,6 +11,7 @@ default_action :install
 start_command = "bin/start"
 stop_command = "bin/stop"
 client_command = "bin/client"
+service_command = "bin/karaf-service"
 
 def karaf_path
   "#{install_path}/karaf"
@@ -31,53 +32,37 @@ action :install do
     owner user
     action :put
   end
-
-  bash 'start karaf' do
-    cwd   karaf_path
-    user  new_resource.user
-    code <<-EOH
-      #{start_command}
-      sleep 20s
-    EOH
-  end
     
   execute 'install karaf service wrapper' do
-    command <<-EOF
-      #{client_command} -u karaf feature:install service-wrapper
-      #{client_command} -u karaf wrapper:install
-    EOF
-    cwd  karaf_path
-    not_if  { ::File.exists?("#{karaf_path}/bin/karaf-service") }
-  end
-
-  bash 'stop karaf' do
     cwd   karaf_path
     user  new_resource.user
-    code <<-EOH
+    command <<-EOF
+      #{start_command}
+      #{client_command} -r 20 -d 3 -u karaf feature:install service-wrapper
+      #{client_command} -r 20 -d 3 -u karaf wrapper:install
       #{stop_command}
-      sleep 10s
-    EOH
+    EOF
+    not_if do ::File.exists?("#{karaf_path}/#{service_command}") end
   end
 
   link '/etc/init.d/karaf-service' do
-    to "#{karaf_path}/bin/karaf-service"
+    to "#{karaf_path}/#{service_command}"
     link_type :symbolic
   end
 
   ruby_block 'modify user that karaf runs as' do
     block do
-      fe = Chef::Util::FileEdit.new("#{karaf_path}/bin/karaf-service")
+      fe = Chef::Util::FileEdit.new("#{karaf_path}/#{service_command}")
       fe.search_file_replace_line(/#RUN_AS_USER=/, "RUN_AS_USER=#{user}")
       fe.write_file
     end
-    only_if { ::File.readlines("#{karaf_path}/bin/karaf-service").grep(/#RUN_AS_USER=/).any? }
+    only_if { ::File.readlines("#{karaf_path}/#{service_command}").grep(/#RUN_AS_USER=/).any? }
   end
 
   service 'karaf-service' do
     supports :status => true, :start => true, :stop => true, :restart => true
-    action [:enable, :start]
+    action [:enable, :restart]
   end
-
 
   execute 'Wait' do
     command <<-EOF
