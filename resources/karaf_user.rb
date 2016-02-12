@@ -17,20 +17,20 @@ action :create do
 
   ruby_block "Update existing user #{user_name}" do
     block do
-      fe = Chef::Util::FileEdit.new("#{users_properties_path}")
+      fe = Chef::Util::FileEdit.new(users_properties_path)
       fe.search_file_replace_line(/#{user_name} = /, "#{user_name} = #{password},#{group_string}")
       fe.write_file
     end
-    only_if { ::File.readlines("#{users_properties_path}").grep(/#{user_name} = /).any? }
+    only_if { ::File.readlines(users_properties_path).grep(/#{user_name} = /).any? }
   end
 
   ruby_block "Create user #{user_name}" do
     block do
-      fe = Chef::Util::FileEdit.new("#{users_properties_path}")
+      fe = Chef::Util::FileEdit.new(users_properties_path)
       fe.insert_line_if_no_match(/#{user_name} = /, "#{user_name} = #{password},#{group_string}")
       fe.write_file
     end
-    not_if { ::File.readlines("#{users_properties_path}").grep(/#{user_name} = /).any? }
+    not_if { ::File.readlines(users_properties_path).grep(/#{user_name} = /).any? }
   end
 
 end

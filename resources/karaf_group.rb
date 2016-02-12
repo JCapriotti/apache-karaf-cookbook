@@ -16,20 +16,20 @@ action :create do
 
   ruby_block "Update existing group #{group_name}" do
     block do
-      fe = Chef::Util::FileEdit.new("#{users_properties_path}")
+      fe = Chef::Util::FileEdit.new(users_properties_path)
       fe.search_file_replace_line(/#{group_name} = /, "_g_\\:#{group_name} = #{role_string}")
       fe.write_file
     end
-    only_if { ::File.readlines("#{users_properties_path}").grep(/#{group_name} = /).any? }
+    only_if { ::File.readlines(users_properties_path).grep(/#{group_name} = /).any? }
   end
 
   ruby_block "Create group #{group_name}" do
     block do
-      fe = Chef::Util::FileEdit.new("#{users_properties_path}")
+      fe = Chef::Util::FileEdit.new(users_properties_path)
       fe.insert_line_if_no_match(/#{group_name} = /, "_g_\\:#{group_name} = #{role_string}")
       fe.write_file
     end
-    not_if { ::File.readlines("#{users_properties_path}").grep(/#{group_name} = /).any? }
+    not_if { ::File.readlines(users_properties_path).grep(/#{group_name} = /).any? }
   end
 
 end
