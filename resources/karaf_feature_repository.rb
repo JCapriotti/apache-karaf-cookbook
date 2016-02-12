@@ -13,10 +13,10 @@ def karaf_path
 end 
 
 action :install do
-  execute 'install feature repo' do
+  bash 'install feature repo' do
     cwd  karaf_path
-    command <<-EOF
-      #{client_command} -u #{client_user} feature:repo-add #{repository_name} #{version}
-    EOF
+    code <<-EOH
+      #{client_command} -r 20 -d 3 -u #{client_user} feature:repo-add #{repository_name} #{version}
+    EOH
   end
 end

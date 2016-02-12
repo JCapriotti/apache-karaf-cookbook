@@ -6,12 +6,29 @@ provisioner:
   name: chef_solo
 
 platforms:
-#  - name: ubuntu-14.04
   - name: centos-6.6
+  - name: ubuntu-14.04
 
 suites:
-  - name: default
+  - name: default-latest
     run_list:
-      - recipe[karaf_test::default]
-      - recipe[karaf_test::remove]
+      - recipe[karaf_test::install]
     attributes:
+      karaf_test:
+        version: '4.0.4'
+
+  - name: default-3
+    run_list:
+      - recipe[karaf_test::install]
+    attributes:
+      karaf_test:
+        version: '3.0.3'
+
+  - name: remove
+    run_list: 
+      - recipe[karaf_test::remove]
+
+  - name: install-remove
+    run_list: 
+      - recipe[karaf_test::install]
+      - recipe[karaf_test::remove]

@@ -4,7 +4,7 @@ This cookbook installs [Apache Karaf](http://karaf.apache.org/).
 
 Usage
 -----
-Override attributes with your desired values and include the `karaf` recipe.
+Use the provided resources to install karaf and configure users and features.
 
 Requirements
 ------------
@@ -12,36 +12,112 @@ Requirements
 * ark cookbook
 
 ### Platform
-* Tested on Fedora 22 and CentOS 6.5
+* Tested on CentOS 6.6 and Ubuntu 14.04 (via Kitchen)
 
-Attributes
-----------
-See `attributes/default.rb` for default values.
+## Resources
 
-* `node['karaf']['version']` - The version to install, defaults to `'3.03'`
-* `node['karaf']['url']` - Overrides the URL to download the karaf from. Otherwise http://archive.apache.org/dist/karaf/&lt;version&gt;/apache-karaf-&lt;version&gt;.tar.gz" is used.
-* `node['karaf']['install_path']` - The path to install to, defaults to `'/usr/local'`
-* `node['karaf']['install_java']` - Whether or not to install Java, defaults to `true`
-* `node['karaf']['service_user']` - The user to run Karaf as, not set by default.
-* `node['karaf']['feature_repos']` - A hash of feature repos to install. Allows you to specify the  repository name as the key and version as the value. Defaults to `'hawtio'` / `'1.4.51'`.
-* `node['karaf']['features']` - An array of the features to install. Defaults to `'hawtio'`.
+### `karaf`
+```ruby
+karaf 'install karaf' do
+  install_java  true
+  version       '4.0.4'
+  user         'someuser'  
+  action        :install
+end
 
-The following attributes control the default Java cookbook settings
+```
+#### Actions
+* `:install` - Installs Karaf and the karaf-service wrapper feature, and starts the service.
+* `:remove` - Removes Karaf and the karaf-service wrapper
 
-* `node['java']['install_flavor']` - Defaults to `'oracle'`
-* `node['java']['jdk_version']` - Defaults to `'7'`
-* `node['java']['set_etc_environment']` - Defaults to `true`
-* `node['java']['oracle']['accept_oracle_download_terms']` - Defaults to `true`
+#### Attributes
+* `install_java` - Whether or not to install Java. *(default: true)*
+* `source_url` - Optional URL to download the Karaf file tar file from.
+* `version` - The version of Karaf to install.
+* `install_path` - Optional install path. *(default: /usr/local)*
+* `user` - The user to run karaf-service as. *(default: root)*
+
+> **Note:**
+> When setting the user to run Karaf as, it is assumed the user is already configured properly. When installing features, Maven may use a local repository for the user, which may require a home directory to be set. 
+
+### `karaf_feature_repository`
+```ruby
+karaf_feature_repository 'hawtio' do
+  version 		'1.4.51'
+  client_user	'karaf'
+  :install
+end
+```
+
+#### Actions
+* `:install` - Installs the specified feature repository.
+
+#### Attributes
+* `install_path` - The path to the installation folder. Needs to match the value in `karaf`. Will be cleaned-up/deprecated once a link is added from this resource to `karaf`. *(default: '/usr/local')*
+* `client_user` - The user to run the karaf client as. *(default: karaf)*
+* `repository_name` - The name of the repository to add. *(name attribute)*
+* `version` - The version of the repository to add. *(default: '')*
+
+
+### `karaf_feature`
+```ruby
+karaf_feature 'hawtio' do
+  :install
+end
+
+```
+#### Actions
+* `:install` - Installs the specified feature.
+
+#### Attributes
+* `install_path` - The path to the installation folder. Needs to match the value in `karaf`. Will be cleaned-up/deprecated once a link is added from this resource to `karaf`. *(default: '/usr/local')*
+* `client_user` - The user to run the karaf client as. *(default: karaf)*
+* `feature_name` - The name of the feature to add. *(name attribute)*
+* `version` - The version of the feature to add. *(default: '')*
+
+
+### `karaf_user`
+```ruby
+karaf_user 'newuser' do
+  groups    ['group1', 'group2']
+  password  'ultrafubar'
+  :create
+end
+```
+
+#### Actions
+* `:create` - Creates or updates the specified karaf user.
+
+#### Attributes
+* `install_path` - The path to the installation folder. Needs to match the value in `karaf`. Will be cleaned-up/deprecated once a link is added from this resource to `karaf`. *(default: '/usr/local')*
+* `user_name` - The name of the user to create. *(name attribute)*
+* `password` - The password for the user.
+* `groups` - An array of groups to add the user to.
+
+
+### `karaf_group`
+```ruby
+karaf_group 'newgroup' do
+  roles   ['role1', 'role2']
+  :create
+end
+```
+
+#### Actions
+* `:create` - Creates or updates the specified karaf group.
+
+#### Attributes
+* `install_path` - The path to the installation folder. Needs to match the value in `karaf`. Will be cleaned-up/deprecated once a link is added from this resource to `karaf`. *(default: '/usr/local')*
+* `group_name` - The name of the group to create. *(name attribute)*
+* `roles` - An array of roles to add the group to.
+
 
 Contributing
 ------------
-TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
-
-e.g.
 1. Fork the repository on Github
 2. Create a named feature branch (like `add_component_x`)
 3. Write your change
-4. Write tests for your change (if applicable)
+4. Write tests for your change
 5. Run the tests, ensuring they all pass
 6. Submit a Pull Request using Github
 

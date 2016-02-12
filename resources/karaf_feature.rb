@@ -20,10 +20,10 @@ action :install do
     feature_string = "#{feature_name}/#{version}"
   end
 
-  execute 'install feature' do
+  bash 'install feature' do
     cwd  karaf_path
-    command <<-EOF
-      #{client_command} -u karaf feature:install #{feature_string}
-    EOF
+    code <<-EOH
+      #{client_command} -r 20 -d 3 -u karaf feature:install #{feature_string}
+    EOH
   end
 end

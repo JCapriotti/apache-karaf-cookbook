@@ -1,11 +1,16 @@
-user 'someuser' do
-  action :create
+if node['platform'] == 'ubuntu'
+  execute 'apt-get update'
 end
 
+user 'someuser' do
+  home      '/home/someuser'
+  supports  :manage_home => true
+  action    :create
+end
 
 karaf 'install karaf' do
   install_java  true
-  version       '3.0.3'
+  version       node['karaf_test']['version']
   user         'someuser'
   action        :install
 end
@@ -26,6 +31,6 @@ karaf_user 'newuser' do
 end
 
 karaf_group 'newgroup' do
-  roles   ['rrrrrrrrrrrrr1', 'rrrrrrrrrrrr2']
+  roles   ['role1', 'role2']
   :create
 end
