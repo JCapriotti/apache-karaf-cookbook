@@ -3,6 +3,10 @@ karaf CHANGELOG
 
 This file is used to list changes made in each version of the karaf cookbook.
 
+1.0.2
+-----
+- Stabilizing race conditions with initial start and installing service-wrapper.
+
 1.0.0 
 -----
 - Major update to use custom resource vs attribute-driven recipe

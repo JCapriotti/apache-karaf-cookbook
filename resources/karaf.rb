@@ -37,12 +37,34 @@ action :install do
     cwd   karaf_path
     user  new_resource.user
     code <<-EOH
+      ## START
       #{start_command}
+      
+      ## feature:install service-wrapper
       #{client_command} -r 20 -d 3 -u karaf feature:install service-wrapper
-      sleep 5
+      while true ; do
+        if [ "$(bin/client -u karaf 'feature:list -i' | grep service-wrapper -c)" -ge 1 ] ; then
+          echo "service-wrapper found"
+          break
+        else
+          echo "service-wrapper NOT found"
+        fi
+      done
+
+      ## wrapper:install
       #{client_command} -r 20 -d 3 -u karaf wrapper:install
-      sleep 5
+      while true ; do
+        if [ -a #{service_command} ] ; then
+          echo "karaf-service found"
+          break
+        else
+          echo "karaf-service NOT found"
+        fi
+      done
+
+      ## STOP
       #{stop_command}
+      sleep 10s
     EOH
     not_if do ::File.exists?("#{karaf_path}/#{service_command}") end
   end
@@ -65,9 +87,7 @@ action :install do
     supports :status => true, :start => true, :stop => true, :restart => true
     action [:enable, :restart]
   end
-
 end
-
 
 action :remove do
 
