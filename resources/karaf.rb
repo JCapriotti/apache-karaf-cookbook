@@ -39,7 +39,9 @@ action :install do
     code <<-EOH
       #{start_command}
       #{client_command} -r 20 -d 3 -u karaf feature:install service-wrapper
+      sleep 5
       #{client_command} -r 20 -d 3 -u karaf wrapper:install
+      sleep 5
       #{stop_command}
     EOH
     not_if do ::File.exists?("#{karaf_path}/#{service_command}") end
