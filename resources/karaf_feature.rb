@@ -7,13 +7,12 @@ property :version, kind_of: String, default: ''
 
 default_action :install
 
-client_command = "bin/client"
+client_command = 'bin/client'
 def karaf_path
   "#{install_path}/karaf"
 end 
 
 action :install do
-
   if version.empty?
     feature_string = feature_name
   else

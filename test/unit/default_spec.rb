@@ -23,7 +23,6 @@ describe 'karaf::test' do
     expect(chef_run).to_not include_recipe('java')
   end
 
-
   it 'downloads and extracts karaf using default values' do
     expect(chef_run).to put_ark('karaf').with(
       url: 'http://archive.apache.org/dist/karaf/3.0.3/apache-karaf-3.0.3.tar.gz', 
@@ -35,12 +34,12 @@ describe 'karaf::test' do
     chef_run.node.override['karaf']['users'] = 
     {
       'karaf' => {
-        'password' => 'karaf', 
+        'password' => 'karaf',
         'groups' => {
           'admingoup' => true,
-          'another_group' => true
-        }
-      }
+          'another_group' => true,
+        },
+      },
     }
     chef_run.converge(described_recipe)
     expect(chef_run).to render_file('/usr/local/karaf/etc/users.properties')
@@ -54,8 +53,7 @@ describe 'karaf::test' do
     chef_run.converge(described_recipe)
     expect(chef_run).to render_file('/usr/local/karaf/etc/users.properties')
       .with_content { |content|
-        expect(content).to_not include("karaf = karaf,_g_:admingroup,")
+        expect(content).to_not include('karaf = karaf,_g_:admingroup,')
       }
   end
-
 end

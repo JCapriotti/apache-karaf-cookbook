@@ -1,0 +1,24 @@
+AllCops:
+  Include:
+    - 'Berksfile'
+    - 'Gemfile'
+    - 'Rakefile'
+    - 'Thorfile'
+    - 'Guardfile'
+  Exclude:
+    - '**/metadata.rb'
+
+ExtraSpacing:
+  Enabled: false
+HashSyntax: 
+  Enabled: false
+LineLength:
+  Max: 120
+SingleSpaceBeforeFirstArg:
+  Enabled: false
+TrailingComma: 
+  EnforcedStyleForMultiline: comma
+TrailingWhitespace:
+  Enabled: false
+WordArray: 
+  Enabled: false

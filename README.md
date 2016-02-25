@@ -36,6 +36,8 @@ end
 * `version` - The version of Karaf to install.
 * `install_path` - Optional install path. *(default: /usr/local)*
 * `user` - The user to run karaf-service as. *(default: root)*
+* `retry_count` - The number of times to retry when performing Karaf client actions. This is important for slower platforms but generally shouldn't need to be changed. *(default: 20)*
+* `retry_delay` - The number of seconds to wait when retrying a Karaf client action. This is important for slower platforms but generally shouldn't need to be changed. *(default: 3)*
 
 > **Note:**
 > When setting the user to run Karaf as, it is assumed the user is already configured properly. When installing features, Maven may use a local repository for the user, which may require a home directory to be set. 
@@ -115,11 +117,12 @@ end
 Contributing
 ------------
 1. Fork the repository on Github
-2. Create a named feature branch (like `add_component_x`)
-3. Write your change
-4. Write tests for your change
-5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
+1. Create a named feature branch (like `add_component_x`)
+1. Write your change
+1. Write tests for your change
+1. Run the tests, ensuring they all pass
+1. Run foodcritic and rubocop to make sure code is clean.
+1. Submit a Pull Request using Github
 
 License and Authors
 -------------------

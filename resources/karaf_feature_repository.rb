@@ -7,7 +7,8 @@ property :version, kind_of: String, default: ''
 
 default_action :install
 
-client_command = "bin/client"
+client_command = 'bin/client'
+
 def karaf_path
   "#{install_path}/karaf"
 end 

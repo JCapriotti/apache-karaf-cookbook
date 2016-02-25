@@ -32,3 +32,16 @@ suites:
     run_list: 
       - recipe[karaf_test::install]
       - recipe[karaf_test::remove]
+
+
+  - name: slow-cloud
+    run_list:
+      - recipe[karaf_test::install]
+    attributes:
+      karaf_test:
+        version: '3.0.3'
+    driver:
+      customize:
+        cpuexecutioncap: 25
+    excludes:
+      - ubuntu-14.04

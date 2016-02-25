@@ -11,7 +11,6 @@ def users_properties_path
 end 
 
 action :create do
-
   role_string = roles.join(',')
 
   ruby_block "Update existing group #{group_name}" do
@@ -31,5 +30,4 @@ action :create do
     end
     not_if { ::File.readlines(users_properties_path).grep(/#{group_name} = /).any? }
   end
-
 end

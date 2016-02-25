@@ -1,6 +1,5 @@
-if node['platform'] == 'ubuntu'
-  execute 'apt-get update'
-end
+
+execute 'apt-get update' if node['platform'] == 'ubuntu'
 
 user 'someuser' do
   home      '/home/someuser'
@@ -11,7 +10,7 @@ end
 karaf 'install karaf' do
   install_java  true
   version       node['karaf_test']['version']
-  user         'someuser'
+  user          'someuser'
   action        :install
 end
 

@@ -12,8 +12,7 @@ def users_properties_path
 end 
 
 action :create do
-
-  group_string = groups.map { |group| "_g_:#{group}," }.join()
+  group_string = groups.map { |group| "_g_:#{group}," }.join
 
   ruby_block "Update existing user #{user_name}" do
     block do
@@ -32,5 +31,4 @@ action :create do
     end
     not_if { ::File.readlines(users_properties_path).grep(/#{user_name} = /).any? }
   end
-
 end

@@ -6,4 +6,3 @@ karaf 'test' do
   install_path  node['test']['install_path']
   user          node['test']['user']
 end
-
