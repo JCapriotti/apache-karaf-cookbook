@@ -81,6 +81,7 @@ end
 ### `karaf_bundle`
 ```ruby
 karaf_bundle 'com.fasterxml.jackson.core/jackson-core' do
+  version '2.4.3'
   :install
 end
 

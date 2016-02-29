@@ -3,7 +3,7 @@ resource_name :karaf_bundle
 property :install_path, kind_of: String, default: '/usr/local'
 property :client_user, kind_of: String, default: 'karaf'
 property :bundle_name, kind_of: String, required: true, name_property: true
-property :version, kind_of: String, default: ''
+property :version, kind_of: String, required: true
 property :wrap, kind_of: [TrueClass, FalseClass], default: false
 
 default_action :install
