@@ -21,14 +21,14 @@ action :install do
   end
 
   bundle_string = "mvn:#{bundle_string}"
-  if wrap?
+  if wrap
       bundle_string = "wrap:#{bundle_string}"
   end
 
   bash 'install bundle' do
     cwd  karaf_path
     code <<-EOH
-      #{client_command} -r 20 -d 3 -u karaf bundle:install -s #{bundle_string}
+      #{client_command} -r 20 -d 3 -u karaf bundle:install #{bundle_string}
     EOH
   end
 end
