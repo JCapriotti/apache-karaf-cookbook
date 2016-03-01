@@ -23,6 +23,11 @@ karaf_feature 'hawtio' do
   :install
 end
 
+karaf_bundle 'com.fasterxml.jackson.core/jackson-core' do
+  version '2.4.3'
+  :install
+end
+
 karaf_user 'newuser' do
   groups    ['group1', 'group2']
   password  'ultrafubar'

@@ -78,6 +78,25 @@ end
 * `version` - The version of the feature to add. *(default: '')*
 
 
+### `karaf_bundle`
+```ruby
+karaf_bundle 'com.fasterxml.jackson.core/jackson-core' do
+  version '2.4.3'
+  :install
+end
+
+```
+#### Actions
+* `:install` - Installs the specified bundle.
+
+#### Attributes
+* `install_path` - The path to the installation folder. Needs to match the value in `karaf`. Will be cleaned-up/deprecated once a link is added from this resource to `karaf`. *(default: '/usr/local')*
+* `client_user` - The user to run the karaf client as. *(default: karaf)*
+* `bundle_name` - The name of the feature to add. *(name attribute)*
+* `version` - The version of the feature to add. *(default: '')*
+* `wrap` - If this bundle needs to be wrapped. Prepends . *(default: false)*
+
+
 ### `karaf_user`
 ```ruby
 karaf_user 'newuser' do
