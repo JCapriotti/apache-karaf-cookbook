@@ -3,7 +3,7 @@ resource_name :karaf_config
 property :install_path, kind_of: String, default: '/usr/local'
 property :client_user, kind_of: String, default: 'karaf'
 property :pid, kind_of: String, required: true, name_property: true
-property :property, kind_of: String, required: true
+property :property, kind_of: String
 property :value, kind_of: String, default: ''
 
 require 'chef/resource'
@@ -27,8 +27,8 @@ action :list do
   end
 end
 
+#  bin/client config:property-set foo bar
 action :property_set do
-#  bin/client -u karaf "config:edit com.dummy; config:property-set foo bar; config:update"
   bash 'property-set' do
     cwd  karaf_path
     code <<-EOH
@@ -37,8 +37,8 @@ action :property_set do
   end
 end
 
+#  bin/client config:property-append foo bar2
 action :property_append do
-#  bin/client -u karaf "config:edit com.dummy; config:property-set foo bar; config:update"
   bash 'property-append' do
     cwd  karaf_path
     code <<-EOH
@@ -47,7 +47,7 @@ action :property_append do
   end
 end
 
-
+#  bin/client config:property-delete foo
 action :property_delete do
 #  bin/client -u karaf "config:edit com.dummy; config:property-set foo bar; config:update"
   bash 'property-delete' do
@@ -58,8 +58,8 @@ action :property_delete do
   end
 end
 
+#  bin/client config:delete my.test(.cfg)
 action :delete do
-#  bin/client -u karaf "config:edit com.dummy; config:property-set foo bar; config:update"
   bash 'delete config' do
     cwd  karaf_path
     code <<-EOH
