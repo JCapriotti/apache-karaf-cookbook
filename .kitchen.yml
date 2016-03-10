@@ -45,3 +45,13 @@ suites:
         cpuexecutioncap: 25
     excludes:
       - ubuntu-14.04
+
+  - name: config
+    run_list:
+      - recipe[karaf_test::install]
+      - recipe[karaf_test::config]
+    attributes:
+      karaf_test:
+        version: '3.0.3'
+    excludes:
+      - ubuntu-14.04
