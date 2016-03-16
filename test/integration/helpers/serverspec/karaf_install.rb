@@ -1,5 +1,3 @@
-require 'serverspec'
-set :backend, :exec
 
 shared_examples_for 'karaf_install' do
   describe 'karaf' do

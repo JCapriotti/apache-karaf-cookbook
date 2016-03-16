@@ -98,6 +98,7 @@ end
 
 
 ### `karaf_user`
+Manages the users defined in user.properties
 ```ruby
 karaf_user 'newuser' do
   groups    ['group1', 'group2']
@@ -117,6 +118,7 @@ end
 
 
 ### `karaf_group`
+Manages the groups defined in user.properties
 ```ruby
 karaf_group 'newgroup' do
   roles   ['role1', 'role2']
@@ -132,6 +134,18 @@ end
 * `group_name` - The name of the group to create. *(name attribute)*
 * `roles` - An array of roles to add the group to.
 
+#### Notes
+This resource automatically adds the (apparently) required `group` role to the group definition. That is:
+```ruby
+karaf_group 'newgroup' do
+  roles   ['role1', 'role2']
+  :create
+end
+```
+
+Will generate this line in user.properties:
+
+    _g_\:newgroup = group,role1,role2,
 
 Contributing
 ------------

@@ -3,6 +3,10 @@ karaf CHANGELOG
 
 This file is used to list changes made in each version of the karaf cookbook.
 
+1.2.1 - 3/16/2016
+-------------------
+- Automatically add the `group` role to new groups. 
+
 1.2.0 - 3/1/2016
 -------------------
 - Add bundle install feature.

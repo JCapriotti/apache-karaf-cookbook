@@ -29,12 +29,17 @@ karaf_bundle 'com.fasterxml.jackson.core/jackson-core' do
 end
 
 karaf_user 'newuser' do
-  groups    ['group1', 'group2']
+  groups    ['newgroup', 'anothergroup']
   password  'ultrafubar'
   :create
 end
 
 karaf_group 'newgroup' do
   roles   ['role1', 'role2']
+  :create
+end
+
+karaf_group 'anothergroup' do
+  roles   ['viewer', 'manager']
   :create
 end
