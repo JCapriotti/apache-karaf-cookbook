@@ -2,13 +2,13 @@
 <%
   kitchen_driver_quick = 'docker'
   kitchen_driver_default = 'vagrant'
-  
+
   if ENV['KITCHEN_DRIVER']
     kitchen_driver = ENV['KITCHEN_DRIVER']
   else
     kitchen_driver = kitchen_driver_default
   end 
-  puts "----> driver_plugin = #{kitchen_driver.to_s}"
+  puts "-----> driver_plugin = #{kitchen_driver.to_s}"
 %>
 
 driver:
@@ -23,7 +23,7 @@ provisioner:
   name: chef_solo
 
 platforms:
-  - name: centos-6.6
+  - name: centos-6.7
 <% if kitchen_driver == 'docker' %>
     driver_config:
       dockerfile: test/Dockerfile
