@@ -55,7 +55,7 @@ action :install do
 
       ## START
       #{start_command} &>> #{log_file}
-      
+
       ## feature:install service-wrapper
       COUNTER=0
       LAST_EXIT=1
@@ -63,7 +63,7 @@ action :install do
         #{client_command} -u karaf feature:install service-wrapper &>> #{log_file}
         LAST_EXIT=$?
         echo "last exit code: " $LAST_EXIT &>> #{log_file}
-        if [ "$LAST_EXIT" -eq "0" ]; then 
+        if [ "$LAST_EXIT" -eq "0" ]; then
           break
         fi
         let COUNTER=COUNTER+1
@@ -109,15 +109,18 @@ action :install do
 
   # Create the service
   if node['platform'] == 'centos' and node['platform_version'] >= '7'
-    # systemd
-    service "#{karaf_path}/bin/karaf.service" do
+    # systemd - avoid using a symlink and just copy the service file, then enable.
+    remote_file '/etc/systemd/system/karaf.service' do
+      source "file://#{karaf_path}/bin/karaf.service"
+    end
+    service 'karaf.service' do
       action    :enable
     end
   else
-    # SysV + Ubuntu (Karaf seems to recommend using SysV for Upbuntu)
+    # SysV + Ubuntu (Karaf seems to recommend using SysV for Ubuntu)
     link '/etc/init.d/karaf' do
-      to "#{karaf_path}/bin/karaf-service"
-      link_type :symbolic
+      to         "#{karaf_path}/bin/karaf-service"
+      link_type  :symbolic
     end
 
     service 'karaf' do

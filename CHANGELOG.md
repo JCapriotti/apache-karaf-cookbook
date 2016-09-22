@@ -3,6 +3,10 @@ karaf CHANGELOG
 
 This file is used to list changes made in each version of the karaf cookbook.
 
+2.0.1 - 9/22/2016
+-------------------
+- Copy `karaf.service` to `/etc/systemd/system` to prevent possible issues with using symlink.
+
 2.0.0 - 8/2/2016
 -------------------
 - Add support for `systemd` service. 
