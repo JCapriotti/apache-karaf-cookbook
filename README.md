@@ -147,6 +147,22 @@ Will generate this line in user.properties:
 
     _g_\:newgroup = group,role1,role2,
 
+Troubleshooting
+---------------
+Installing the Karaf service wrapper sometimes encounters issues. The install log log is located at `/tmp/karaf-install.log`
+
+Known Issues
+------------
+The service wrapper component does not reliably install, depending on the version of Karaf and Centos.
+
+* 4.0.4 - works fine
+* 3.0.6 (and above?) - Not working
+* 3.0.5 - Supports systemd, WORKS FINE
+* 3.0.4 - 
+  * Centos 6 fails; call to `feature:install service-wrapper` appears to not be working.
+  * Centos 7 has similar issue.
+* 3.0.3 - No systemd file in wrapper; so Centos 7 fails.
+
 Contributing
 ------------
 1. Fork the repository on Github

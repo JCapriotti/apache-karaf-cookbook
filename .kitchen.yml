@@ -6,23 +6,24 @@ provisioner:
   name: chef_solo
 
 platforms:
-  - name: centos-6.6
+  - name: centos-6.7
+  - name: centos-7.2
   - name: ubuntu-14.04
 
 suites:
-  - name: default-latest
+  - name: default-404
     run_list:
       - recipe[karaf_test::install]
     attributes:
       karaf_test:
         version: '4.0.4'
 
-  - name: default-3
+  - name: default-305
     run_list:
       - recipe[karaf_test::install]
     attributes:
       karaf_test:
-        version: '3.0.3'
+        version: '3.0.5'
 
   - name: remove
     run_list: 
@@ -32,7 +33,6 @@ suites:
     run_list: 
       - recipe[karaf_test::install]
       - recipe[karaf_test::remove]
-
 
   - name: slow-cloud
     run_list:

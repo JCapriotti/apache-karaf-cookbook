@@ -14,9 +14,9 @@ HashSyntax:
   Enabled: false
 LineLength:
   Max: 120
-SingleSpaceBeforeFirstArg:
+SpaceBeforeFirstArg:
   Enabled: false
-TrailingComma: 
+TrailingCommaInArguments:
   EnforcedStyleForMultiline: comma
 TrailingWhitespace:
   Enabled: false
