@@ -12,7 +12,7 @@ Requirements
 * ark cookbook
 
 ### Platform
-* Tested on CentOS 6.6 and Ubuntu 14.04 (via Kitchen)
+* Tested on CentOS 6.6, CentOS 7.2 and Ubuntu 14.04 (via Kitchen)
 
 ## Resources
 
@@ -20,7 +20,7 @@ Requirements
 ```ruby
 karaf 'install karaf' do
   install_java  true
-  version       '4.0.4'
+  version       '4.0.7'
   user         'someuser'  
   action        :install
 end
@@ -155,6 +155,7 @@ Known Issues
 ------------
 The service wrapper component does not reliably install, depending on the version of Karaf and Centos.
 
+* 4.0.7 - works fine with Java 8
 * 4.0.4 - works fine
 * 3.0.6 (and above?) - Not working
 * 3.0.5 - Supports systemd, WORKS FINE

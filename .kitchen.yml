@@ -18,6 +18,13 @@ suites:
       karaf_test:
         version: '4.0.4'
 
+  - name: default-407
+    run_list:
+      - recipe[karaf_test::install]
+    attributes:
+      karaf_test:
+        version: '4.0.7'
+
   - name: default-305
     run_list:
       - recipe[karaf_test::install]

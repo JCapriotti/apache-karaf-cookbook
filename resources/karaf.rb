@@ -14,7 +14,7 @@ start_command = 'bin/start'
 stop_command = 'bin/stop'
 log_file = '/tmp/karaf-install.log'
 service_wrapper_file = 'bin/karaf-service'
-
+keys_file = 'etc/keys.properties'
 
 # The root folder of the karaf install
 def karaf_path
@@ -23,7 +23,7 @@ end
 
 # The call to the karaf client, with defaulted retry parameters
 def client_command
-  "bin/client -r #{retry_count} -d #{retry_delay}"
+  "bin/client -u karaf -r #{retry_count} -d #{retry_delay}"
 end
 
 
@@ -46,58 +46,39 @@ action :install do
     owner user
     action :put
   end
-    
-  bash 'install karaf service wrapper' do
-    cwd   karaf_path
-    user  new_resource.user
-    code <<-EOH
-      echo ">>>>>>> Start at " $(date --rfc-3339=seconds) &>> #{log_file}
-
-      ## START
-      #{start_command} &>> #{log_file}
-
-      ## feature:install service-wrapper
-      COUNTER=0
-      LAST_EXIT=1
-      until [ "$COUNTER" -eq "#{retry_count}" ]; do
-        #{client_command} -u karaf feature:install service-wrapper &>> #{log_file}
-        LAST_EXIT=$?
-        echo "last exit code: " $LAST_EXIT &>> #{log_file}
-        if [ "$LAST_EXIT" -eq "0" ]; then
-          break
-        fi
-        let COUNTER=COUNTER+1
-        echo "retry " $COUNTER  &>> #{log_file}
-        sleep #{retry_delay}
-      done
-
-      while true; do
-        if [ "$(bin/client -u karaf 'feature:list -i' | grep service-wrapper -c)" -ge 1 ] ; then
-          echo "service-wrapper found" &>> #{log_file}
-          break
-        else
-          echo "service-wrapper NOT found" &>> #{log_file}
-        fi
-      done
-
-      ## wrapper:install
-      #{client_command} -u karaf wrapper:install &>> #{log_file}
-      while true ; do
-        if [ -a #{service_wrapper_file} ] ; then
-          echo "karaf-service found" &>> #{log_file}
-          break
-        else
-          echo "karaf-service NOT found" &>> #{log_file}
-        fi
-      done
-
-      ## STOP
-      #{stop_command} &>> #{log_file}
-      sleep 10s
-    EOH
-    not_if { ::File.exist?("#{karaf_path}/#{service_wrapper_file}") }
+  
+  ruby_block 'uncomment karaf user key' do
+    block do
+      fe = Chef::Util::FileEdit.new("#{karaf_path}/#{keys_file}")
+      fe.search_file_replace(/#karaf=/, "karaf=")
+      fe.write_file
+    end
+    only_if { ::File.readlines("#{karaf_path}/#{keys_file}").grep(/#karaf=/).any? }
   end
-
+  
+  bash 'start karaf' do
+	cwd   karaf_path
+    user  new_resource.user
+	code  start_command
+  end
+  
+  bash 'install karaf service wrapper feature' do
+	cwd          karaf_path
+    user         new_resource.user
+	code         "#{client_command} feature:install service-wrapper"
+	retries      retry_count
+	retry_delay  retry_delay
+  end
+  
+  bash 'install karaf wrapper' do
+	cwd          karaf_path
+    user         new_resource.user
+	code         "#{client_command} wrapper:install"
+	retries      retry_count
+	retry_delay  retry_delay
+	not_if       "bin/client -u karaf 'feature:list -i' | grep -v grep | grep service-wrapper -c"
+  end
+  
   ruby_block 'modify user that karaf runs as' do
     block do
       fe = Chef::Util::FileEdit.new("#{karaf_path}/#{service_wrapper_file}")
@@ -108,7 +89,7 @@ action :install do
   end
 
   # Create the service
-  if node['platform'] == 'centos' and node['platform_version'] >= '7'
+  if ::File.exists?("#{karaf_path}/bin/karaf.service") and node['platform'] == 'centos' and node['platform_version'] >= '7'
     # systemd - avoid using a symlink and just copy the service file, then enable.
     remote_file '/etc/systemd/system/karaf.service' do
       source "file://#{karaf_path}/bin/karaf.service"
@@ -121,6 +102,13 @@ action :install do
     link '/etc/init.d/karaf' do
       to         "#{karaf_path}/bin/karaf-service"
       link_type  :symbolic
+	  only_if    { ::File.exists?("#{karaf_path}/bin/karaf-service") }
+    end
+	
+	link '/etc/init.d/karaf' do
+      to         "#{karaf_path}/bin/karaf.service"
+      link_type  :symbolic
+	  only_if    { ::File.exists?("#{karaf_path}/bin/karaf.service") }
     end
 
     service 'karaf' do
