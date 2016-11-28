@@ -79,6 +79,15 @@ action :install do
 	not_if       "bin/client -u karaf 'feature:list -i' | grep -v grep | grep service-wrapper -c"
   end
   
+  ruby_block 'comment karaf user key' do
+    block do
+      fe = Chef::Util::FileEdit.new("#{karaf_path}/#{keys_file}")
+      fe.search_file_replace(/karaf=/, "#karaf=")
+      fe.write_file
+    end
+    only_if { ::File.readlines("#{karaf_path}/#{keys_file}").grep(/karaf=/).any? }
+  end
+  
   ruby_block 'modify user that karaf runs as' do
     block do
       fe = Chef::Util::FileEdit.new("#{karaf_path}/#{service_wrapper_file}")
