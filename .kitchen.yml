@@ -8,6 +8,8 @@ provisioner:
 platforms:
   - name: centos-6.7
   - name: centos-7.2
+    driver:
+      box_version: '2.2.9'
   - name: ubuntu-14.04
 
 suites:
@@ -24,6 +26,11 @@ suites:
     attributes:
       karaf_test:
         version: '4.0.7'
+        java:
+          jdk_version: '8'
+    excludes:
+      - ubuntu-14.04
+      - centos-6.7
 
   - name: default-305
     run_list:

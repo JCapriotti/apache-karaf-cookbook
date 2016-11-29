@@ -57,26 +57,26 @@ action :install do
   end
   
   bash 'start karaf' do
-	cwd   karaf_path
+    cwd   karaf_path
     user  new_resource.user
-	code  start_command
+    code  start_command
   end
   
   bash 'install karaf service wrapper feature' do
-	cwd          karaf_path
+    cwd          karaf_path
     user         new_resource.user
-	code         "#{client_command} feature:install service-wrapper"
-	retries      retry_count
-	retry_delay  retry_delay
+    code         "#{client_command} feature:install service-wrapper"
+    retries      retry_count
+    retry_delay  retry_delay
   end
   
   bash 'install karaf wrapper' do
-	cwd          karaf_path
+    cwd          karaf_path
     user         new_resource.user
-	code         "#{client_command} wrapper:install"
-	retries      retry_count
-	retry_delay  retry_delay
-	not_if       "bin/client -u karaf 'feature:list -i' | grep -v grep | grep service-wrapper -c"
+    code         "#{client_command} wrapper:install"
+    retries      retry_count
+    retry_delay  retry_delay
+    not_if       "bin/client -u karaf 'feature:list -i' | grep -v grep | grep service-wrapper -c"
   end
   
   ruby_block 'comment karaf user key' do
@@ -98,7 +98,7 @@ action :install do
   end
 
   # Create the service
-  if ::File.exists?("#{karaf_path}/bin/karaf.service") and node['platform'] == 'centos' and node['platform_version'] >= '7'
+  if node['platform'] == 'centos' and node['platform_version'] >= '7'
     # systemd - avoid using a symlink and just copy the service file, then enable.
     remote_file '/etc/systemd/system/karaf.service' do
       source "file://#{karaf_path}/bin/karaf.service"
@@ -111,13 +111,7 @@ action :install do
     link '/etc/init.d/karaf' do
       to         "#{karaf_path}/bin/karaf-service"
       link_type  :symbolic
-	  only_if    { ::File.exists?("#{karaf_path}/bin/karaf-service") }
-    end
-	
-	link '/etc/init.d/karaf' do
-      to         "#{karaf_path}/bin/karaf.service"
-      link_type  :symbolic
-	  only_if    { ::File.exists?("#{karaf_path}/bin/karaf.service") }
+    only_if    { ::File.exists?("#{karaf_path}/bin/karaf-service") }
     end
 
     service 'karaf' do
