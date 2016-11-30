@@ -3,6 +3,17 @@ karaf CHANGELOG
 
 This file is used to list changes made in each version of the karaf cookbook.
 
+3.0.0 - 11/29/2016
+-------------------
+- Support for newer Karaf versions
+  - The automation using `bin/client` necessitated removing the user parameter. I *think* username karaf is used by 
+    default and is able to authenticate when its a local connection.
+- The `client_user` parameter was removed from the following resources. It may be added back at some point. The previous 
+  bullet is the reason). 
+  - `karaf_bundle`
+  - `karaf_feature`
+  - `karaf_feature_repository`
+
 2.0.1 - 9/22/2016
 -------------------
 - Copy `karaf.service` to `/etc/systemd/system` to prevent possible issues with using symlink.

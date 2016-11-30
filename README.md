@@ -46,7 +46,6 @@ end
 ```ruby
 karaf_feature_repository 'hawtio' do
   version 		'1.4.51'
-  client_user	'karaf'
   :install
 end
 ```
@@ -56,7 +55,6 @@ end
 
 #### Attributes
 * `install_path` - The path to the installation folder. Needs to match the value in `karaf`. Will be cleaned-up/deprecated once a link is added from this resource to `karaf`. *(default: '/usr/local')*
-* `client_user` - The user to run the karaf client as. *(default: karaf)*
 * `repository_name` - The name of the repository to add. *(name attribute)*
 * `version` - The version of the repository to add. *(default: '')*
 
@@ -73,7 +71,6 @@ end
 
 #### Attributes
 * `install_path` - The path to the installation folder. Needs to match the value in `karaf`. Will be cleaned-up/deprecated once a link is added from this resource to `karaf`. *(default: '/usr/local')*
-* `client_user` - The user to run the karaf client as. *(default: karaf)*
 * `feature_name` - The name of the feature to add. *(name attribute)*
 * `version` - The version of the feature to add. *(default: '')*
 
@@ -91,7 +88,6 @@ end
 
 #### Attributes
 * `install_path` - The path to the installation folder. Needs to match the value in `karaf`. Will be cleaned-up/deprecated once a link is added from this resource to `karaf`. *(default: '/usr/local')*
-* `client_user` - The user to run the karaf client as. *(default: karaf)*
 * `bundle_name` - The name of the feature to add. *(name attribute)*
 * `version` - The version of the feature to add. *(default: '')*
 * `wrap` - If this bundle needs to be wrapped. Prepends . *(default: false)*

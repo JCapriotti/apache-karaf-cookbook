@@ -14,4 +14,12 @@ shared_examples 'karaf_install' do
     it { should be_running.under('systemd') }
   end
 
+  describe file('/usr/local/karaf/bin/karaf-service') do
+    its(:content) { should match /RUN_AS_USER=someuser/ }
+  end
+
+  describe file('/usr/local/karaf/data/karaf.pid') do
+    it { should be_owned_by 'someuser' }
+  end
+
 end

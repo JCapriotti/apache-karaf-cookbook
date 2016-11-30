@@ -12,9 +12,7 @@ default_action :install
 
 start_command = 'bin/start'
 stop_command = 'bin/stop'
-log_file = '/tmp/karaf-install.log'
 service_wrapper_file = 'bin/karaf-service'
-keys_file = 'etc/keys.properties'
 
 # The root folder of the karaf install
 def karaf_path
@@ -23,7 +21,7 @@ end
 
 # The call to the karaf client, with defaulted retry parameters
 def client_command
-  "bin/client -u karaf -r #{retry_count} -d #{retry_delay}"
+  "bin/client -r #{retry_count} -d #{retry_delay}"
 end
 
 
@@ -46,22 +44,13 @@ action :install do
     owner user
     action :put
   end
-  
-  ruby_block 'uncomment karaf user key' do
-    block do
-      fe = Chef::Util::FileEdit.new("#{karaf_path}/#{keys_file}")
-      fe.search_file_replace(/#karaf=/, "karaf=")
-      fe.write_file
-    end
-    only_if { ::File.readlines("#{karaf_path}/#{keys_file}").grep(/#karaf=/).any? }
-  end
-  
+
   bash 'start karaf' do
     cwd   karaf_path
     user  new_resource.user
     code  start_command
   end
-  
+
   bash 'install karaf service wrapper feature' do
     cwd          karaf_path
     user         new_resource.user
@@ -69,7 +58,7 @@ action :install do
     retries      retry_count
     retry_delay  retry_delay
   end
-  
+
   bash 'install karaf wrapper' do
     cwd          karaf_path
     user         new_resource.user
@@ -78,16 +67,7 @@ action :install do
     retry_delay  retry_delay
     not_if       "bin/client -u karaf 'feature:list -i' | grep -v grep | grep service-wrapper -c"
   end
-  
-  ruby_block 'comment karaf user key' do
-    block do
-      fe = Chef::Util::FileEdit.new("#{karaf_path}/#{keys_file}")
-      fe.search_file_replace(/karaf=/, "#karaf=")
-      fe.write_file
-    end
-    only_if { ::File.readlines("#{karaf_path}/#{keys_file}").grep(/karaf=/).any? }
-  end
-  
+
   ruby_block 'modify user that karaf runs as' do
     block do
       fe = Chef::Util::FileEdit.new("#{karaf_path}/#{service_wrapper_file}")
@@ -111,7 +91,6 @@ action :install do
     link '/etc/init.d/karaf' do
       to         "#{karaf_path}/bin/karaf-service"
       link_type  :symbolic
-    only_if    { ::File.exists?("#{karaf_path}/bin/karaf-service") }
     end
 
     service 'karaf' do

@@ -1,7 +1,7 @@
 require 'serverspec'
 set :backend, :exec
 
-describe command('/usr/local/karaf/bin/client -u karaf "realm-manage --realm karaf; user-list"') do
+describe command('/usr/local/karaf/bin/client "realm-manage --realm karaf; user-list"') do
   its(:stdout) { should match create_user_list_regex('karaf', 'admingroup', 'admin') }
   its(:stdout) { should match create_user_list_regex('karaf', 'admingroup', 'manager') }
   its(:stdout) { should match create_user_list_regex('karaf', 'admingroup', 'viewer') }
