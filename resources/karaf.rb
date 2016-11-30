@@ -115,14 +115,22 @@ action :remove do
     ignore_failure  true
     cwd             karaf_path
     user            new_resource.user
-    code <<-EOH
-      #{stop_command}
-    EOH
+    code            stop_command
   end
 
-  link '/etc/init.d/karaf-service' do
+  link '/etc/init.d/karaf' do
     ignore_failure  true
     action :delete
+  end
+
+  link '/etc/systemd/system/karaf' do
+    ignore_failure  true
+    action :delete
+  end
+
+  file '/etc/systemd/system/karaf.service' do
+    ignore_failure  true
+    action          :delete
   end
 
   directory karaf_path do
