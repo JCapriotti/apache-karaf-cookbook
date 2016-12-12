@@ -73,7 +73,6 @@ end
 * `install_path` - The path to the installation folder. Needs to match the value in `karaf`. Will be cleaned-up/deprecated once a link is added from this resource to `karaf`. *(default: '/usr/local')*
 * `feature_name` - The name of the feature to add. *(name attribute)*
 * `version` - The version of the feature to add. *(default: '')*
-* `start` - Whether or not to start the bundle. This may be dependent on the version of Karaf, and if it supports `-s` for the `bundle:install` command. *(default: false)*
 
 ### `karaf_bundle`
 ```ruby
@@ -92,6 +91,7 @@ end
 * `bundle_name` - The name of the feature to add. *(name attribute)*
 * `version` - The version of the feature to add. *(default: '')*
 * `wrap` - If this bundle needs to be wrapped. Prepends . *(default: false)*
+* `start` - Whether or not to start the bundle. This may be dependent on the version of Karaf, and if it supports `-s` for the `bundle:install` command. *(default: false)*
 
 
 ### `karaf_user`
