@@ -15,8 +15,6 @@ end
 action :install do
   bash 'install feature repo' do
     cwd  karaf_path
-    code <<-EOH
-      #{client_command} feature:repo-add #{repository_name} #{version}
-    EOH
+    code "#{client_command} feature:repo-add #{repository_name} #{version}"
   end
 end

@@ -20,8 +20,6 @@ action :install do
 
   bash 'install feature' do
     cwd  karaf_path
-    code <<-EOH
-      #{client_command} feature:install #{feature_string}
-    EOH
+    code "#{client_command} feature:install #{feature_string}"
   end
 end

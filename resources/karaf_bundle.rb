@@ -26,8 +26,6 @@ action :install do
 
   bash 'install bundle' do
     cwd  karaf_path
-    code <<-EOH
-      #{client_command} bundle:install #{bundle_string}
-    EOH
+    code "#{client_command} bundle:install -s #{bundle_string}"
   end
 end
