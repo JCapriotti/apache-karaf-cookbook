@@ -3,6 +3,10 @@ karaf CHANGELOG
 
 This file is used to list changes made in each version of the karaf cookbook.
 
+3.1.0 - !2/12/2016
+-------------------
+- Add option to `karaf_bundle` to start the bundle after installation.
+
 3.0.0 - 11/29/2016
 -------------------
 - Support for newer Karaf versions

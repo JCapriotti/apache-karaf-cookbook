@@ -4,6 +4,7 @@ property :install_path, kind_of: String, default: '/usr/local'
 property :bundle_name, kind_of: String, required: true, name_property: true
 property :version, kind_of: String, required: true
 property :wrap, kind_of: [TrueClass, FalseClass], default: false
+property :start, kind_of: [TrueClass, FalseClass], default: false
 
 default_action :install
 
@@ -24,8 +25,13 @@ action :install do
       bundle_string = "wrap:#{bundle_string}"
   end
 
+  command_options = ''
+  if start
+    command_options = '-s'
+  end
+
   bash 'install bundle' do
     cwd  karaf_path
-    code "#{client_command} bundle:install -s #{bundle_string}"
+    code "#{client_command} \"bundle:install #{command_options} #{bundle_string}\""
   end
 end

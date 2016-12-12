@@ -22,4 +22,8 @@ shared_examples 'karaf_install' do
     it { should be_owned_by 'someuser' }
   end
 
+  describe command('/usr/local/karaf/bin/client bundle:list Jackson-core') do
+    its(:stdout) { should match /Active/ }
+  end
+
 end
