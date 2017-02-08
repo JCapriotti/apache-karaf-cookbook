@@ -8,7 +8,7 @@ user 'someuser' do
 end
 
 karaf 'install karaf' do
-  install_java  true
+  install_java  node['karaf_test']['install_java']
   version       node['karaf_test']['version']
   user          'someuser'
   action        :install
@@ -25,6 +25,7 @@ end
 
 karaf_bundle 'com.fasterxml.jackson.core/jackson-core' do
   version '2.4.3'
+  start   true
   :install
 end
 

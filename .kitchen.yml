@@ -16,35 +16,71 @@ driver:
 <% if kitchen_driver == 'docker' %>
   binary: docker
   use_sudo: false
+#  provision_command:
+#    - /usr/bin/systemctl enable sshd
+#  run_command: /usr/sbin/init
   privileged: true
+#  provision_command:
+#    - echo "SSHD_OPTS='-o UseDNS=no -o UsePAM=no -o PasswordAuthentication=yes -o UsePrivilegeSeparation=no -o PidFile=/tmp/sshd.pid'" > /etc/default/ssh
+#  run_command: /sbin/init
+#  cap_add:
+#    - ALL
+#    - SYS_ADMIN
+#    - NET_ADMIN
+#    - NET_BIND_SERVICE
+#    - NET_BROADCAST
 <% end %>
 
 provisioner:
   name: chef_solo
 
+<% if kitchen_driver == 'vagrant' %>
 platforms:
   - name: centos-6.7
+  - name: centos-7.2
+    driver:
+      box_version: '2.2.9'
+  - name: ubuntu-14.04
+<% end %>
+
 <% if kitchen_driver == 'docker' %>
+platforms:
+  - name: centos-6.7
     driver_config:
       dockerfile: test/Dockerfile
-      platform: centos      
+  - name: centos-7
+    driver_config:
+      dockerfile: test/Dockerfile
 <% end %>
-  - name: ubuntu-14.04
+
 
 suites:
-  - name: default-latest
+  - name: default-404
     run_list:
       - recipe[karaf_test::install]
     attributes:
       karaf_test:
         version: '4.0.4'
 
-  - name: default-3
+  - name: default-407
     run_list:
       - recipe[karaf_test::install]
     attributes:
       karaf_test:
-        version: '3.0.3'
+        version: '4.0.7'
+        install_java: <%= kitchen_driver == 'docker' ? false : true %>
+        java:
+          jdk_version: '8'
+    excludes:
+      - ubuntu-14.04
+      - centos-6.7
+
+  - name: default-305
+    run_list:
+      - recipe[karaf_test::install]
+    attributes:
+      karaf_test:
+        version: '3.0.5'
 
   - name: remove
     run_list: 
@@ -55,15 +91,14 @@ suites:
       - recipe[karaf_test::install]
       - recipe[karaf_test::remove]
 
-
-  - name: slow-cloud
-    run_list:
-      - recipe[karaf_test::install]
-    attributes:
-      karaf_test:
-        version: '3.0.3'
-    driver:
-      customize:
-        cpuexecutioncap: 25
-    excludes:
-      - ubuntu-14.04
+#  - name: slow-cloud
+#    run_list:
+#      - recipe[karaf_test::install]
+#    attributes:
+#      karaf_test:
+#        version: '3.0.3'
+#    driver:
+#      customize:
+#        cpuexecutioncap: 25
+#    excludes:
+#      - ubuntu-14.04
