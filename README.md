@@ -12,7 +12,7 @@ Requirements
 * ark cookbook
 
 ### Platform
-* Tested on CentOS 6.6 and Ubuntu 14.04 (via Kitchen)
+* Tested on CentOS 6.6, CentOS 7.2 and Ubuntu 14.04 (via Kitchen)
 
 ## Resources
 
@@ -20,7 +20,7 @@ Requirements
 ```ruby
 karaf 'install karaf' do
   install_java  true
-  version       '4.0.4'
+  version       '4.0.7'
   user         'someuser'  
   action        :install
 end
@@ -46,7 +46,6 @@ end
 ```ruby
 karaf_feature_repository 'hawtio' do
   version 		'1.4.51'
-  client_user	'karaf'
   :install
 end
 ```
@@ -56,7 +55,6 @@ end
 
 #### Attributes
 * `install_path` - The path to the installation folder. Needs to match the value in `karaf`. Will be cleaned-up/deprecated once a link is added from this resource to `karaf`. *(default: '/usr/local')*
-* `client_user` - The user to run the karaf client as. *(default: karaf)*
 * `repository_name` - The name of the repository to add. *(name attribute)*
 * `version` - The version of the repository to add. *(default: '')*
 
@@ -73,15 +71,14 @@ end
 
 #### Attributes
 * `install_path` - The path to the installation folder. Needs to match the value in `karaf`. Will be cleaned-up/deprecated once a link is added from this resource to `karaf`. *(default: '/usr/local')*
-* `client_user` - The user to run the karaf client as. *(default: karaf)*
 * `feature_name` - The name of the feature to add. *(name attribute)*
 * `version` - The version of the feature to add. *(default: '')*
-
 
 ### `karaf_bundle`
 ```ruby
 karaf_bundle 'com.fasterxml.jackson.core/jackson-core' do
   version '2.4.3'
+  start   true
   :install
 end
 
@@ -91,10 +88,10 @@ end
 
 #### Attributes
 * `install_path` - The path to the installation folder. Needs to match the value in `karaf`. Will be cleaned-up/deprecated once a link is added from this resource to `karaf`. *(default: '/usr/local')*
-* `client_user` - The user to run the karaf client as. *(default: karaf)*
 * `bundle_name` - The name of the feature to add. *(name attribute)*
 * `version` - The version of the feature to add. *(default: '')*
 * `wrap` - If this bundle needs to be wrapped. Prepends . *(default: false)*
+* `start` - Whether or not to start the bundle. This may be dependent on the version of Karaf, and if it supports `-s` for the `bundle:install` command. *(default: false)*
 
 
 ### `karaf_user`
@@ -146,6 +143,23 @@ end
 Will generate this line in user.properties:
 
     _g_\:newgroup = group,role1,role2,
+
+Troubleshooting
+---------------
+Installing the Karaf service wrapper sometimes encounters issues. The install log log is located at `/tmp/karaf-install.log`
+
+Known Issues
+------------
+The service wrapper component does not reliably install, depending on the version of Karaf and Centos.
+
+* 4.0.7 - works fine with Java 8
+* 4.0.4 - works fine
+* 3.0.6 (and above?) - Not working
+* 3.0.5 - Supports systemd, WORKS FINE
+* 3.0.4 - 
+  * Centos 6 fails; call to `feature:install service-wrapper` appears to not be working.
+  * Centos 7 has similar issue.
+* 3.0.3 - No systemd file in wrapper; so Centos 7 fails.
 
 Contributing
 ------------
