@@ -1,6 +1,8 @@
 ---
 driver:
   name: vagrant
+  customize:
+    cableconnected1: "on"
 
 provisioner:
   name: chef_solo
@@ -11,6 +13,7 @@ platforms:
     driver:
       box_version: '2.2.9'
   - name: ubuntu-14.04
+  - name: ubuntu-16.04
 
 suites:
   - name: default-404
@@ -47,6 +50,10 @@ suites:
     run_list: 
       - recipe[karaf_test::install]
       - recipe[karaf_test::remove]
+
+  - name: custom
+    run_list:
+      - recipe[karaf_test::custom]
 
 #  - name: slow-cloud
 #    run_list:
